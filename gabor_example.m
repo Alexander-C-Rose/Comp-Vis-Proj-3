@@ -39,7 +39,7 @@
 
 
 clear all;
-texture=imread('D8','bmp');
+texture=imread('D1','bmp');
 [X,Y]=size(texture);		% Size of the texture image
 Ns=4; No=6;			% Numbers of scale and orientation in Gabor	
  
