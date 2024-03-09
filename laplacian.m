@@ -92,6 +92,16 @@ for i = 1:59
         V(i,:,j) = [mean, variance, skew, kurtosis];    
     end
 end
+
+% Save image data to separate file (used by multiple programs)
+save("img.mat", "img");   
+
 % Clear unneeded variables from memory before saving
-clear D Dk Dm Ds Dv pyr i j pyr_num mean variance skew kurtosis
+clear D Dk Dm Ds Dv pyr i j pyr_num mean variance skew kurtosis img
+
+% Save remaining variables to this file
 save("laplacian_4Layer.mat");
+
+% Clear remaining variables from workspace
+clear
+disp("Laplacian file Generated");
