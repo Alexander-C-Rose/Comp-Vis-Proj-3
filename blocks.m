@@ -19,7 +19,6 @@ for k = 1:59
     end
 end
 
-
 save("blocks.mat", "block", "block_label");
 disp("blocks file generated");
 clear
