@@ -14,7 +14,8 @@ load("laplacian_4Layer.mat");
 % Load blocks to test
 load("blocks.mat");
 %   blocks = blocks to test in double format (64 x 64 x 5900)
-%   U is the normalized feature vector
+%   U is the normalized feature vector of the Laplacian
+%   block_label = stores the label of the block for classification
 
 % Correct stores the number of correct classifications
 correct = 0;
@@ -34,7 +35,9 @@ for i = 1:5900
     for j = 1:59
         % Euclidean Distance calculation using layer 1 row j (i.e. texture
         % j since rows correspond to textures).
-        dist = sqrt(sum((V(j,:)- U(i)) .^2));
+        temp = (V(j,2,2:5) - U(i,2,2:5)); % Use variance of layers 2 to 5
+        temp2 = sum(temp .^2) + (V(j,1,1) - U(i,1,1)).^2; % mean of layer 1
+        dist = sqrt(temp2);
         if j == 1
             best_L1 = dist;
             label(i,1) = j;
@@ -52,5 +55,7 @@ for i = 1:5900
     end
 end
 
-PCC_L1 = (correct ./ 5900) .* 100;
-disp(PCC_L1);
+% Percent Correctly Classified Laplacian
+PCC_L = (correct ./ 5900) .* 100;
+disp(PCC_L);
+

@@ -28,8 +28,8 @@ end
 
 y = cell(1, nlev+1);
 
-for n = 1:nlev
-    [x, y{nlev-n+2}] = lpdec1(x, h, g, extmod);
+for n = 1:nlev-1
+    [x, y{nlev-n+1}] = lpdec1(x, h, g, extmod);
 end
 
 y{1} = x;

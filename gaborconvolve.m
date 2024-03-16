@@ -95,7 +95,7 @@ thetaSigma = pi/norient/dThetaOnSigma;  % Calculate the standard deviation of th
 % The main loop...
 
 for o = 1:norient,                   % For each orientation.
-  fprintf('Processing orientation %d \n', o);
+  % fprintf('Processing orientation %d \n', o);
   angl = (o-1)*pi/norient;           % Calculate filter angle.
   wavelength = minWaveLength;        % Initialize filter wavelength.
 

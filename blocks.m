@@ -1,6 +1,14 @@
 %% Divide texture into blocks and save to file
 clear
-load("img.mat")
+
+for i = 1:59
+    % read in the files 
+    D = sprintf('D%i.bmp', i); % String representing the filename
+    img(:,:,i) = double(imread(D)); 
+end
+
+% Save image data to separate file
+save("img.mat", "img");   
 
 % count 
 count = 1;

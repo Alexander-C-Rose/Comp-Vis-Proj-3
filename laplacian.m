@@ -19,20 +19,23 @@ kur_min = [];
 % feature vector, and finally, find the max/min value of statistics across 
 % all feature vectors. 
 
-pyr_num = 4; % Number of Pyramid layers to use
+pyr_num = 5; % Number of Pyramid layers to use
 for i = 1:59
-    % read in the file
-    D = sprintf('D%i.bmp', i);
-    img(:,:,i) = double(imread(D));
+    % read in the files 
+    D = sprintf('D%i.bmp', i); % String representing the filename
+    % The pyramid program requires a double normalized by 256
+    img(:,:,i) = double(imread(D))/256; 
 
     % generate laplacian pyramid of image
-    pyr = genPyr(img(:,:,i), 'lap', pyr_num);
+    pyr = lpd(img(:,:,i), 'Burt', pyr_num);
+
+    % For each layer...
     for j = 1:pyr_num
         % feature vector calc.
-        Dm = mean(pyr{j}, "all");           % calculates the mean
-        Dv = var(pyr{j}, 0, "all");         % calculates the variance
-        Ds = skewness(pyr{j}, 1, "all");    % calculates the skewness
-        Dk = kurtosis(pyr{j}, 1, "all");    % calculates the kurtosis
+        Dm = mean(pyr{j}(:));        % calculates the mean
+        Dv = var(pyr{j}(:));         % calculates the variance
+        Ds = skewness(pyr{j}(:));    % calculates the skewness
+        Dk = kurtosis(pyr{j}(:));    % calculates the kurtosis
         
         % Store values in feature vector
         V(i,:,j) = [Dm, Dv, Ds, Dk];
@@ -103,7 +106,7 @@ end
 % count 
 count = 1;
 for k = 1:59
-    temp = double(img(:,:,k));
+    temp = img(:,:,k);
     for i = 0:64:639
         for j = 0:64:639
             % Store image to a block
@@ -119,9 +122,9 @@ end
 
 for i=1:5900
     % generate laplacian pyramid of the block
-    pyr_block = genPyr(block(:,:,i), 'lap', pyr_num);
+    pyr_block = lpd(block(:,:,i), '9/7', pyr_num);
 
-    for j = 1:4 % number of pyramid layers used
+    for j = 1:pyr_num % number of pyramid layers used
         % feature vector calc.
         Dm = mean(pyr_block{j}, "all");           % calculates the mean
         Dv = var(pyr_block{j}, 0, "all");         % calculates the variance

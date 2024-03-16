@@ -44,7 +44,7 @@ texture=imread('D1','bmp');
 Ns=4; No=6;			% Numbers of scale and orientation in Gabor	
  
 E0=gaborconvolve(texture,Ns,No,3,2,0.65,1.5);
- 
+
 for i=1:Ns
     for j=1:No
         ind=(i-1)*No+j;      		% Calculate the index of each sub-plot
