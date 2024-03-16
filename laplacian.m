@@ -1,7 +1,8 @@
 %% This file generates the feature vectors for the Laplacian Pyramid
 % The data is stored in a .mat file to save time when running other code
 clear;
-
+load("blocks.mat");
+load("img.mat");
 % Variables to store max values
 mean_max = [];
 var_max = [];
@@ -21,10 +22,8 @@ kur_min = [];
 
 pyr_num = 5; % Number of Pyramid layers to use
 for i = 1:59
-    % read in the files 
-    D = sprintf('D%i.bmp', i); % String representing the filename
-    % The pyramid program requires a double normalized by 256
-    img(:,:,i) = double(imread(D))/256; 
+    % For this Pyramid toolbox, the image must be normalized by 256
+    img(:,:,i) = img(:,:,i)/256; 
 
     % generate laplacian pyramid of image
     pyr = lpd(img(:,:,i), 'Burt', pyr_num);
@@ -101,28 +100,11 @@ for i = 1:59
 end
 
 
-%% Divide texture into blocks and save to file
-
-% count 
-count = 1;
-for k = 1:59
-    temp = img(:,:,k);
-    for i = 0:64:639
-        for j = 0:64:639
-            % Store image to a block
-            block(:,:,count) = temp(i+1:i+64, j+1:j+64);
-
-            % Store the block label for testing. 
-            block_label(count) = k;
-            count = count + 1;  % increase count for next image to store
-
-        end
-    end
-end
-
+%% Calculate statistics of block files
 for i=1:5900
     % generate laplacian pyramid of the block
-    pyr_block = lpd(block(:,:,i), '9/7', pyr_num);
+    block(:,:,i) = block(:,:,i)/256;
+    pyr_block = lpd(block(:,:,i), 'Burt', pyr_num);
 
     for j = 1:pyr_num % number of pyramid layers used
         % feature vector calc.
@@ -141,18 +123,10 @@ for i=1:5900
         U(i,:,j) = [Dm, Dv, Ds, Dk];
     end
 end
-save("blocks.mat", "block", "block_label", "U");
-disp("blocks file generated");
 
 %% Save other data to laplacian data file
-% Save image data to separate file (in case it's used by other programs)
-save("img.mat", "img");   
-
-% Clear unneeded variables from memory before saving
-clear D Dk Dm Ds Dv pyr pyr_block i j pyr_num mean variance skew kurtosis img
-
 % Save remaining variables to this file
-save("laplacian_4Layer.mat");
+save("laplacian_4Layer.mat", "V", "U");
 
 % Clear remaining variables from workspace
 clear
