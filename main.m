@@ -65,9 +65,16 @@ PCC_L = (correct ./ 5900) .* 100;
 disp(PCC_L);
 
 %% Gabor Classification
+run = 0;
+% Run through every number of scales and orientations
+for nscale = 1:4
+for norient = 1:6
+run = run + 1;
 
-%Load Gabor Data
-load("Gabor.mat");
+
+%Load Gabor Data file for a given scale and orientation
+D = sprintf('Gabor_%i_%i.mat', nscale, norient); % String representing the filename
+load(D);
 
 % Correct stores the number of correct classifications with Gabor
 correct_G = 0;
@@ -79,12 +86,14 @@ for i = 1:total
     label = []; 
     best_L1 = [];
 
-    % Loop through textures
-    for j = 1:59
+    % Loop through textures and check the euclidean distance of each
+    % texture with the block. Assign the label of the block to the texture
+    % with the closest euclidean distance. 
+    for j = 1:59 % Loop through textures 1 to 59
         % Euclidean Distance calculation
-        temp = (V_Gab(j,1) - U_Gab(i,1));
-        temp2 = sum(temp .^2) + (V_Gab(j,1) - U_Gab(i,1)).^2;
-        dist = sqrt(temp2);
+        m = (V_Gab{j}(:,2) - U_Gab{i}(:,2)).^2;
+        temp = sum(m(:));
+        dist = sqrt(temp);
 
         % Initialize label estimate
         if j == 1
@@ -100,7 +109,7 @@ for i = 1:total
     end
 
 
-    % Check if classification is correct; increment if true.
+    % Check if classification is correct; increment correct_G if true.
     if (block_label(i) == label(i))
         correct_G = correct_G + 1;
     end
@@ -109,3 +118,18 @@ end
 % Percent Correctly Classified Laplacian
 PCC_G = (correct_G ./ total) .* 100;
 disp(PCC_G);
+if run == 1
+    Gabor_optimal = PCC_G;
+    norient_optimal = norient;
+    nscale_optimal = nscale;
+end
+if PCC_G > Gabor_optimal
+    Gabor_optimal = PCC_G;
+    norient_optimal = norient;
+    nscale_optimal = nscale;
+end
+end
+end
+disp(Gabor_optimal);
+disp(nscale_optimal);
+disp(norient_optimal);
