@@ -72,7 +72,7 @@ for i = 1:59
     Dk = kurtosis(Mag(:));    % calculates the kurtosis
     
     % Store values in feature vector
-    V(i,:) = [Dm, Dv, Ds, Dk];
+    V_Gab(i,:) = [Dm, Dv, Ds, Dk];
 
     % set initial max and min values
     if (i == 1)
@@ -122,25 +122,23 @@ end
 %% Normalize the feature vectors
 for i = 1:59
     % val_norm is a function I made to normalize values
-    m = val_norm(V(i,1), mean_min, mean_max);  %norm mean
-    v = val_norm(V(i,2), var_min, var_max);%norm variance
-    s = val_norm(V(i,3), skew_min, skew_max);  %norm skew 
-    k = val_norm(V(i,4), kur_min, kur_max);%norm kurtosis
+    m = val_norm(V_Gab(i,1), mean_min, mean_max);  %norm mean
+    v = val_norm(V_Gab(i,2), var_min, var_max);%norm variance
+    s = val_norm(V_Gab(i,3), skew_min, skew_max);  %norm skew 
+    k = val_norm(V_Gab(i,4), kur_min, kur_max);%norm kurtosis
 
     % Replace the vector with the normalized vector
-    V(i,:) = [m, v, s, k];
+    V_Gab(i,:) = [m, v, s, k];
 end
 
 
 %% Load texture blocks and save Gabor information to file
-% I'm loading the blocks generated from the laplacian file but without the
-% feature vector from said file. 
 
 % Load blocks
 load("blocks.mat", "block");
 %   blocks = blocks to test in double format (64 x 64 x 5900)
 
-
+% Run through blocks
 for i=1:5900
     fprintf('Processing block %d \n', i);
     % generate laplacian pyramid of the block
@@ -152,7 +150,7 @@ for i=1:5900
     Mag1 = [];
     for s = 1:nscale
         for o = 1:norient
-            Mag_temp = abs(E0{s,o});
+            Mag_temp = abs(E1{s,o});
             Mag1 = [Mag1; Mag_temp];
         end
     end
@@ -170,21 +168,12 @@ for i=1:5900
     Dk = val_norm(Dk, kur_min, kur_max);        %norm kurtosis
 
     % Store Normalized values in vector
-    U(i,:) = [Dm, Dv, Ds, Dk];
+    U_Gab(i,:) = [Dm, Dv, Ds, Dk];
 end
-% save("gabor.mat", "block", "block_label", "U");
-% disp("blocks file generated");
-% 
-% %% Save other data to laplacian data file
-% % Save image data to separate file (in case it's used by other programs)
-% save("img.mat", "img");   
-% 
-% % Clear unneeded variables from memory before saving
-% clear D Dk Dm Ds Dv E0 pyr_block i j pyr_num mean variance skew kurtosis img
-% 
-% % Save remaining variables to this file
-% save("laplacian_4Layer.mat");
-% 
-% % Clear remaining variables from workspace
+%% Save data to laplacian data file
+% Save variables to a file
+save("Gabor.mat", "V_Gab", "U_Gab");
+
+% Clear remaining variables from workspace
 % clear
-% disp("Laplacian file Generated");
+disp("Gabor file Generated");

@@ -1,5 +1,9 @@
 %% This file generates the feature vectors for the Laplacian Pyramid
 % The data is stored in a .mat file to save time when running other code
+
+% Add pyramid toolbox to path
+addpath(genpath('.\Laplacian Pyramid Toolbox'));
+
 clear;
 load("blocks.mat");
 load("img.mat");
@@ -124,8 +128,8 @@ for i=1:5900
     end
 end
 
-%% Save other data to laplacian data file
-% Save remaining variables to this file
+%% Save data to laplacian data file
+% Save variables to a file
 save("laplacian_4Layer.mat", "V", "U");
 
 % Clear remaining variables from workspace
