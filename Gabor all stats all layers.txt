@@ -1,0 +1,61 @@
+scale = 1; orientation = 1   40.1356
+
+scale = 1; orientation = 2   57.2712
+
+scale = 1; orientation = 3   63.3559
+
+scale = 1; orientation = 4   72.7119
+
+scale = 1; orientation = 5   69.6102
+
+scale = 1; orientation = 6   70.5254
+
+scale = 2; orientation = 1   60.1525
+
+scale = 2; orientation = 2   70.6780
+
+scale = 2; orientation = 3   79.1017
+
+scale = 2; orientation = 4   82.5763
+
+scale = 2; orientation = 5   81.8136
+
+scale = 2; orientation = 6   81.9831
+
+scale = 3; orientation = 1   71.9831
+
+scale = 3; orientation = 2   76.9153
+
+scale = 3; orientation = 3   81.9661
+
+scale = 3; orientation = 4   85.2542
+
+scale = 3; orientation = 5   83.2034
+
+scale = 3; orientation = 6   82.6780
+
+scale = 4; orientation = 1   74.8136
+
+scale = 4; orientation = 2   75.3898
+
+scale = 4; orientation = 3   82.2881
+
+scale = 4; orientation = 4   85.2712
+
+scale = 4; orientation = 5   83.2034
+
+scale = 4; orientation = 6   80.1017
+
+scale = 5; orientation = 1   69.4576
+
+scale = 5; orientation = 2   63.5763
+
+scale = 5; orientation = 3   72.2881
+
+scale = 5; orientation = 4   76.5763
+
+scale = 5; orientation = 5   72.6610
+
+scale = 5; orientation = 6   68.5424
+
+Best Gabor PCC is 85.270000% accurate with 4 scales and 4 orientations

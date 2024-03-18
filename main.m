@@ -17,7 +17,7 @@ load("blocks.mat");
 run = 0;
 for pyr_num = 4
 run = run+1;
-fprintf("Number of Layers = %i", run);
+fprintf("Number of Layers = %i", pyr_num);
 % Load Laplacian Data
 D = sprintf("Laplacian_%i.mat", pyr_num);
 load(D);
@@ -100,13 +100,14 @@ D = sprintf("Best Laplacian PCC is %f%% accurate with %i Layers", ...
 disp(D);
 [mislabel Ind] = max(mislabel);
 
+
 %% Gabor Classification
 run = 0;
 % Run through every number of scales and orientations
-for nscale = 1:4
-for norient = 1:6
+for nscale = 4
+for norient = 4
 run = run + 1;
-
+fprintf("scale = %i; orientation = %i", nscale, norient);
 
 %Load Gabor Data file for a given scale and orientation
 D = sprintf('Gabor_%i_%i.mat', nscale, norient); % String representing the filename
@@ -126,11 +127,21 @@ for i = 1:total
     % texture with the block. Assign the label of the block to the texture
     % with the closest euclidean distance. 
     for j = 1:59 % Loop through textures 1 to 59
-        % Euclidean Distance calculation
-        m = (V_Gab{j}(:,2) - U_Gab{i}(:,2)).^2;
-        temp = sum(m(:));
-        dist = sqrt(temp);
 
+        % Euclidean Distance calculation
+        % Pick which statistic to use with each cell being a different 
+        % texture. Each column corresponds to a different statistic while
+        % the number of rows are determined by the number of scales x
+        % orientations (that is, a 4 scale 4 orientation filter has 16 rows
+        % with each containing a set of statistics)
+        v{1} = (V_Gab{j}(:,1) - U_Gab{i}(:,1)).^2; %mean
+        v{2} = (V_Gab{j}(:,2) - U_Gab{i}(:,2)).^2; %var
+        %v{3} = (V_Gab{j}(:,3) - U_Gab{i}(:,3)).^2; %skew
+        % v{4} = (V_Gab{j}(:,4) - U_Gab{i}(:,4)).^2; %kur
+        temp = [v{1}(:); v{2}(:)]; %; v{3}(:); v{4}(:)];
+        temp2 = sum(temp);
+        dist = sqrt(temp2);
+        
         % Initialize label estimate
         if j == 1
             best_L1 = dist;
@@ -158,7 +169,7 @@ end
 PCC_G = (correct_G ./ total) .* 100;
 disp(PCC_G);
 if run == 1
-    Gabor_optimal = PCC_G;
+    Gabor_optimal = round(PCC_G, 2);
     norient_optimal = norient;
     nscale_optimal = nscale;
 end
@@ -176,17 +187,17 @@ D = sprintf("Best Gabor PCC is %f%% accurate with %i scales and %i orientations"
 disp(D);
 
 %% Plot a laplacian pyramid of a texture
-
-figure(1);
-pyr = lpd((img(:,:,51)/256), 'Burt', 4);
-imshow(mat2gray(img(:,:,51)), InitialMagnification=200);
-
-figure(2);
-imshow(mat2gray(pyr{1}*256));
-figure(3);
-imshow(mat2gray(pyr{2}*256));
-figure(4);
-imshow(mat2gray(pyr{3}*256));
-figure(5);
-imshow(mat2gray(pyr{4}*256));
-
+% 
+% figure(1);
+% pyr = lpd((img(:,:,51)/256), 'Burt', 4);
+% imshow(mat2gray(img(:,:,51)), InitialMagnification=200);
+% 
+% figure(2);
+% imshow(mat2gray(pyr{1}*256));
+% figure(3);
+% imshow(mat2gray(pyr{2}*256));
+% figure(4);
+% imshow(mat2gray(pyr{3}*256));
+% figure(5);
+% imshow(mat2gray(pyr{4}*256));
+% 
