@@ -15,7 +15,7 @@ function y = lpd(x, pfilt, nlev)
 
 % Get the pyramidal filters from the filter name
 [h, g] = pfilters(pfilt);
-
+nlev = nlev-1;
 % Decide extension mode
 switch pfilt
     case {'9-7', '9/7', '5-3', '5/3', 'Burt'}
@@ -28,8 +28,8 @@ end
 
 y = cell(1, nlev+1);
 
-for n = 1:nlev-1
-    [x, y{nlev-n+1}] = lpdec1(x, h, g, extmod);
+for n = 1:nlev
+    [x, y{nlev-n+2}] = lpdec1(x, h, g, extmod);
 end
 
 y{1} = x;
