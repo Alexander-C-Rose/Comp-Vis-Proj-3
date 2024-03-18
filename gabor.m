@@ -37,7 +37,7 @@ minWaveLength = 3;
 mult = 2;
 sigmaOnf = 0.65;
 dThetaOnSigma = 1.5;
-for nscale = 1:4
+for nscale = 1:5
 for norient = 1:6
 
 % Variables to store max values

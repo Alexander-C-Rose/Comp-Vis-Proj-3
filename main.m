@@ -15,9 +15,9 @@ load("blocks.mat");
 
 %% Laplacian Classification
 run = 0;
-for pyr_num = 4:4
+for pyr_num = 4
 run = run+1;
-
+fprintf("Number of Layers = %i", run);
 % Load Laplacian Data
 D = sprintf("Laplacian_%i.mat", pyr_num);
 load(D);
@@ -49,8 +49,15 @@ for i = 1:5900
     % Loop through textures
     for j = 1:59
         % Euclidean Distance calculation
-        temp = (V(j,2,:) - U(i,2,:)); % Use variance of all layers
-        temp2 = sum(temp .^2) + (V(j,1,1) - U(i,1,1)).^2; % mean of layer 1
+        % Pick which statistic to use with row being the texture, column
+        % being the statistic, and dim3 being the layer. Layer 1 is the
+        % smallest and layer 5 is the largest. 
+        v{1} = (V(j,1,1) - U(i,1,1)).^2;
+        v{2} = (V(j,2,:) - U(i,2,:)).^2;
+        v{3} = (V(j,3,2:4) - U(i,3,2:4)).^2;
+        v{4} = (V(j,4,2:4) - U(i,4,2:4)).^2;
+        temp = [v{1}(:); v{2}(:); v{3}(:); v{4}(:)];
+        temp2 = sum(temp);
         dist = sqrt(temp2);
 
         % Initialize label estimate
@@ -80,7 +87,7 @@ end
 PCC_L = (correct ./ 5900) .* 100;
 disp(PCC_L);
 if run == 1
-    Laplacian_optimal = PCC_L;
+    Laplacian_optimal = round(PCC_L, 2);
     Layer_optimal = pyr_num;
 end
 if PCC_L > Laplacian_optimal
@@ -96,8 +103,8 @@ disp(D);
 %% Gabor Classification
 run = 0;
 % Run through every number of scales and orientations
-for nscale = 4:4
-for norient = 4:4
+for nscale = 1:4
+for norient = 1:6
 run = run + 1;
 
 
@@ -171,17 +178,15 @@ disp(D);
 %% Plot a laplacian pyramid of a texture
 
 figure(1);
-pyr = lpd(img(:,:,18), 'Burt', 4);
-tiledlayout(4,2);
-nexttile(1,[4 1]);
-imshow("D18.bmp");
+pyr = lpd((img(:,:,51)/256), 'Burt', 4);
+imshow(mat2gray(img(:,:,51)), InitialMagnification=200);
 
-nexttile(2, [1 1]);
-imshow(uint8(pyr{1}));
-nexttile(3, [1 1]);
-imshow(uint8(pyr{2}));
-nexttile(4, [1 1]);
-imshow(uint8(pyr{3}));
-nexttile(5, [1 1]);
-imshow(uint8(pyr{4}));
+figure(2);
+imshow(mat2gray(pyr{1}*256));
+figure(3);
+imshow(mat2gray(pyr{2}*256));
+figure(4);
+imshow(mat2gray(pyr{3}*256));
+figure(5);
+imshow(mat2gray(pyr{4}*256));
 
