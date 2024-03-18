@@ -24,7 +24,7 @@ kur_min = [];
 % feature vector, and finally, find the max/min value of statistics across 
 % all feature vectors. 
 
-pyr_num = 5; % Number of Pyramid layers to use
+for pyr_num = 1:5 % Number of Pyramid layers to use
 for i = 1:59
     % For this Pyramid toolbox, the image must be normalized by 256
     img(:,:,i) = img(:,:,i)/256; 
@@ -130,8 +130,9 @@ end
 
 %% Save data to laplacian data file
 % Save variables to a file
-save("laplacian_4Layer.mat", "V", "U");
-
+D = sprintf('Laplacian_%i.mat', pyr_num); % String representing the filename
+save(D, "V", "U");
+end
 % Clear remaining variables from workspace
 clear
 disp("Laplacian file Generated");
