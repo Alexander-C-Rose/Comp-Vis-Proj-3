@@ -186,18 +186,70 @@ D = sprintf("Best Gabor PCC is %f%% accurate with %i scales and %i orientations"
     Gabor_optimal, nscale_optimal, norient_optimal);
 disp(D);
 
-%% Plot a laplacian pyramid of a texture
-% 
-% figure(1);
-% pyr = lpd((img(:,:,51)/256), 'Burt', 4);
-% imshow(mat2gray(img(:,:,51)), InitialMagnification=200);
-% 
-% figure(2);
-% imshow(mat2gray(pyr{1}*256));
-% figure(3);
-% imshow(mat2gray(pyr{2}*256));
-% figure(4);
-% imshow(mat2gray(pyr{3}*256));
-% figure(5);
-% imshow(mat2gray(pyr{4}*256));
-% 
+%% Plot an image of laplacian pyramid of a texture
+figure(Color="white");
+subplot(2,2,1);
+pyr = lpd((img(:,:,32)/256), 'Burt', 4);
+
+% Function I made to convert pyramid to image. Must be 4 layers at any size.
+toshow = pyr_to_img4(pyr);
+imshow(toshow);
+title("Texture 32 pyramid");
+
+% arbitrarily pick a block from within texture 51
+pyr_bl = lpd(img(:,:,34)/256, 'Burt', 4);
+toshow_bl = pyr_to_img4(pyr_bl);
+
+subplot(2,2,2);
+imshow(toshow_bl);
+title("Texture 34 pyramid");
+
+subplot(2,2,3);
+imshow(mat2gray(img(:,:,32)));
+title("Texture 32")
+
+subplot(2,2,4);
+imshow(mat2gray(img(:,:,34)));
+title("Texture 34");
+
+figure(Color="White");
+minWaveLength = 3;
+mult = 2;
+sigmaOnf = 0.65;
+dThetaOnSigma = 1.5;
+nscale = 4;
+norient = 4;
+E0 = gaborconvolve(img(:,:,15),nscale, norient, minWaveLength, mult, ...
+        sigmaOnf, dThetaOnSigma);
+
+[X,Y]=size(img(:,:,15));		% Size of the texture image
+for i=1:nscale
+    for j=1:norient
+        ind=(i-1)*norient+j;      		% Calculate the index of each sub-plot
+        subplot(4,4,ind);           		% Create a multi-figure plot
+        Mi=abs(E0{i,j});            		% Create the magnitude for each Gabor channel
+        imshow(mat2gray(Mi));              		% Show the Gabor filter output
+        title(sprintf("S=%i; O=%i", i, j));
+        Miv{ind}=reshape(Mi,X*Y,1); 	% Reshape the matrix data to vector data
+    end
+end
+
+
+figure(Color="White");
+E1 = gaborconvolve(img(:,:,14),nscale, norient, minWaveLength, mult, ...
+        sigmaOnf, dThetaOnSigma);
+
+[X,Y]=size(img(:,:,14));		% Size of the texture image
+for i=1:nscale
+    for j=1:norient
+        ind=(i-1)*norient+j;      		% Calculate the index of each sub-plot
+        subplot(4,4,ind);           		% Create a multi-figure plot
+        Mi=abs(E1{i,j});            		% Create the magnitude for each Gabor channel
+        imshow(mat2gray(Mi));              		% Show the Gabor filter output
+        title(sprintf("S=%i; O=%i", i, j));
+        Miv{ind}=reshape(Mi,X*Y,1); 	% Reshape the matrix data to vector data
+    end
+end
+
+
+

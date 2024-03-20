@@ -1,4 +1,4 @@
-%% This file generates the feature vectors for the Laplacian Pyramid
+%% This file generates the feature vectors for the Gabor Filter
 % The data is stored in a .mat file to save time when running other code
 tic
 clear;
@@ -81,8 +81,7 @@ for i = 1:59
 
             % set initial max and min values
             if (i == 1)
-                % initialize starting value for each layer
-                % j corresponds to the layer this value is for.
+                % initialize starting value for each statistic
                 mean_max = Dm;
                 mean_min = Dm;
                 var_max = Dv;
@@ -96,31 +95,23 @@ for i = 1:59
         
             % Update max/min values every time a new image is read in.
             if (Dm> mean_max)
-                mean_max = Dm;
-            end
+                mean_max = Dm; end
             if (Dv > var_max)
-                var_max = Dv;
-            end
+                var_max = Dv;end
             if (Ds > skew_max)
-                skew_max = Ds;
-            end
+                skew_max = Ds;end
             if (Dk > kur_max)
-                kur_max = Dk;
-            end
+                kur_max = Dk;end
         
             % Update min values
             if (Dm < mean_min)
-                mean_min = Dm;
-            end
+                mean_min = Dm;end
             if (Dv < var_min)
-                var_min = Dv;
-            end
+                var_min = Dv;end
             if (Ds < skew_min)
-                skew_min = Ds;
-            end
+                skew_min = Ds;end
             if (Dk < kur_min)
-                kur_min = Dk;
-            end
+                kur_min = Dk;end
         end
     end
 
@@ -156,7 +147,7 @@ U_Gab = {};
 % Run through blocks
 for i=1:5900
     fprintf('Processing block %d \n', i);
-    % generate laplacian pyramid of the block
+    % generate gabor result of the block
     % Filter the texture with Gabor filtering
     E1 = gaborconvolve(block(:,:,i),nscale, norient, minWaveLength, mult, ...
         sigmaOnf, dThetaOnSigma);
@@ -191,7 +182,7 @@ for i=1:5900
     % textures feature vectors
     U_Gab{i} = U_temp2;
 end
-%% Save data to laplacian data file
+%% Save data to Gabor data file
 % Save variables to a file
 D = sprintf('Gabor_%i_%i.mat', nscale, norient); % String representing the filename
 save(D, "V_Gab", "U_Gab");
